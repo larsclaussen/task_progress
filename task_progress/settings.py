@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djcelery',
+    'bootstrap3',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -56,7 +57,8 @@ ROOT_URLCONF = 'task_progress.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'monitor/templates'),
+                 os.path.join(BASE_DIR, 'monitor/templates/screens')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
