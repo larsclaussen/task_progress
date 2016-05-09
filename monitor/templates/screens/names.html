@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block names %}
+
+
+<div class="container">
+  <h2>Job names</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>App</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for name in view.names %}
+      <tr>
+        <td>{{ name }}</td>
+        <td>description....</td>
+        <td>app...</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

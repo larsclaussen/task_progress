@@ -56,6 +56,7 @@ def third_step():
     for i in range(7):
         sleep(2)
     print "in third"
+    # r_except()
     print "request id ", do_work.request.id
 
     MonitorThread.update_jobs_state(do_work.request.id, do_work, 'THIRD_STEP', 80, 100)

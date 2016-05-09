@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block js %}
+
+
+
+
+<script type="text/javascript">
+
+function executeQuery() {
+  $.ajax({
+    url: '{% url "monitor" %}',
+    type: 'get',
+    success: function(data) {
+      console.log(data)
+      $('#update_me').html(data);
+    }
+  });
+  setTimeout(executeQuery, 5000); // you could choose not to continue on failure...
+}
+
+$(document).ready(function() {
+  // run the first time; all subsequent calls will take care of themselves
+  setTimeout(executeQuery, 5000);
+});
+
+
+function UpdateJobs() {
+  $.ajax({
+    url: '{% url "monitor" %}',
+    type: 'get',
+    data: { q: "done"},
+    success: function(jobs) {
+      console.log(jobs)
+      $('#inner_jobs').remove();
+      $('#test').html(jobs);
+
+    }
+  });
+}
+
+
+function StartNewJob() {
+  $.ajax({
+    url: '{% url "monitor" %}',
+    type: 'get',
+    data: { q: "start"},
+    success: function(job) {
+      console.log(job)
+     $('#alert_placeholder').html('<div id="job-started" class="alert alert-info"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong>Yes! </strong> Job started successfully</div>')
+
+    }
+  });
+}
+
+function progress(percent, $element) {
+     var progressBarWidth = percent * $element.width() / 100;
+     $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
+ }
+
+progress(80, $('#progressBar'));
+
+</script>
+
+{% endblock %}
+
+
+{% block monitor %}
+<div class="container" style="margin-top:50px">
+
+    <div id="alert_placeholder"></div>
+
+
+<h2>Currently running</h2>
+<button type="button" class="btn btn-info" onclick="StartNewJob()">start new job</button>
+
+
+{% block active %}
+<div id="update_me"></div>
+{% endblock %}
+
+</div>
+
+{% block done %}
+{% if view.monitor.jobs_done %}
+<h2>Finished running</h2>
+
+<div id="update_jobs">
+    <div id="inner_jobs">
+        {% for d in view.monitor.jobs_done %}
+        {% for k,v in d.items %}
+        <li>{{ k }}: {{ v }}</li>
+        {% endfor %}
+        {% endfor %}
+    </div>
+{% else %}
+<h2>No jobs finished yet</h2>
+{% endif %}
+    <button type="button" class="btn btn-default" onclick="UpdateJobs()">Update jobs list</button>
+</div>
+{% endblock %}
+<!--<div id="#progressBar" style="width:400px; height: 22px; border: 1px solid #111;background-color: #292929;"></div>-->
+{% endblock %}
+

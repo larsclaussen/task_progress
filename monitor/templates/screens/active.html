@@ -1,0 +1,76 @@
+{% block active %}
+
+<div class="container">
+  <h2>Active</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Start time</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for job_dict in running_jobs %}
+      <tr>
+        <td>{{ job_dict.name }}</td>
+        <td>{{ job_dict.id }}</td>
+        <td>{{ job_dict.state }}</td>
+        <td>{{ job_dict.start_time }}</td>
+        <td>
+
+    	<div class="progress">
+        	<div class="progress-bar-info" role="progressbar" aria-valuenow="{{ job_dict.status.current }}"
+        	aria-valuemin="0" aria-valuemax="100" style="width:{{ job_dict.status.current }}%">
+        	progress
+        	</div>
+    	</div>
+	</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!--<div class="container-fluid">-->
+  <!--<div class="row">-->
+    <!--{% for job_dict in running_jobs %}-->
+    <!--<div class="col-xs-6 col-sm-6 col-md-8 col-lg-8 ">{{ job_dict.name }}   {{ job_dict.id }}</div>-->
+    <!--{% endfor %}-->
+  <!--</div>-->
+<!--</div>-->
+<!--args: []-->
+
+<!--time_start: 54608.8811222-->
+
+<!--name: tasks.do_work-->
+
+<!--delivery_info: {u'priority': 0, u'redelivered': None, u'routing_key': u'celery', u'exchange': u'celery'}-->
+
+<!--hostname: celery@larss-MacBook-Pro.local-->
+
+<!--acknowledged: True-->
+
+<!--kwargs: {}-->
+
+<!--id: my-bad-ass4-->
+
+<!--worker_pid: 3313-->
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

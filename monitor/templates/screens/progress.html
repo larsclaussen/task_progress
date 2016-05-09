@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block js %}
+
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('.progress').hide()
+       });
+
+
+function StartNewJob() {
+  $.ajax({
+    url: '{% url "progress" %}',
+    type: 'get',
+    data: { q: "progress"},
+    dataType: 'json',
+    success: function(job) {
+      console.log(job)
+      console.log(job['id'])
+     $('#alert_placeholder').html('<div id="job-started" class="alert alert-info"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong>Yes! </strong> Job started successfully</div>')
+     getProgress(job['id'])
+
+    //
+    }
+  });
+
+}
+
+
+var loop_started = false;
+var poll_heartbeat;
+
+function getProgress(job_id) {
+  var percent;
+  var id = job_id;
+  console.log("id " + job_id)
+  $.ajax({
+    url: '{% url "progress" %}',
+    dataType: 'json',
+    type: 'get',
+    data: { q: "poll_state", job_id: id},
+    success: function(progress) {
+      var p = progress
+      console.log(p)
+      if (loop_started === false) {
+        console.log("THIS SHOULD BE ONCE " + loop_started)
+        startLoop(id)
+        }
+      if (p == 'success'){
+        stopHeartbeat()
+        $('#alert_placeholder').html('<div id="job-started" class="alert alert-info"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong>Yes! </strong> Job finished successfully</div>')
+            $('.progress-bar-info').css('width', 100+'%').attr('aria-valuenow', 100);
+            $('.progress').fadeOut(6000);
+            loop_started = false;
+        }
+      else if (p == 'failure'){
+        stopHeartbeat()
+        $('#alert_placeholder').html('<div id="job-started" class="alert alert-warning"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong>Warning! </strong> Job failed!</div>')
+            $('.progress-bar-info').css('width', 100+'%').attr('aria-valuenow', 100);
+            $('.progress').fadeOut(6000);
+            loop_started = false;
+        }
+      else {
+        percent = p['current']
+        console.log("percent is now " + percent)
+        if (percent !== 'undefined'){
+            $('.progress-bar-info').css('width', percent+'%').attr('aria-valuenow', percent);
+            }
+      }
+      // call progress bar...
+    }
+  });
+}
+
+function stopHeartbeat() {
+    console.log("heartbeat stop...")
+    clearInterval(poll_heartbeat);
+}
+
+function startLoop(id){
+  loop_started = true;
+  console.log("loop_started " + loop_started)
+  console.log("started loop for ID " + id)
+  poll_heartbeat = setInterval(function(){ getProgress(id) }, 8000);
+  $('.progress-bar-info').css('width', 0+'%').attr('aria-valuenow', 0);
+  $('.progress').show()
+}
+
+function showProgress(percent, $element) {
+     var progressBarWidth = percent * $element.width() / 100;
+     $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "% ");
+ }
+
+//showProgress(80, $('#progressBar'));
+
+</script>
+
+{% endblock %}
+
+{% block progress %}
+<div class="container" style="margin-top:80px">
+    <div id="alert_placeholder"></div>
+
+    <button type="button" class="btn btn-warning" onclick="StartNewJob()">start test job</button>
+
+    <div class="progress" style="margin-top:10px">
+        <div class="progress-bar-info" role="progressbar" aria-valuenow="0"
+        aria-valuemin="0" aria-valuemax="100" style="width:0%">
+        progress
+        </div>
+    </div>
+
+</div>
+{% endblock %}

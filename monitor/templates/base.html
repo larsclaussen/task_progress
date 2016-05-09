@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    {# Load the tag library #}
+    {% load bootstrap3 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+    <title>monitor demo</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    {% block js %}
+    {% endblock %}
+
+</head>
+<body>
+<header>
+<nav class="navbar navbar-inverse navbar-fixed-top" style="background:#CCC">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a style="color:white" class="navbar-brand" href="#">M<i class="fa fa-desktop"></i>nitor</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href='{% url "names" %}'>job names</a></li>
+      <li><a href='{% url "monitor" %}'>currently running</a></li>
+      <li><a href="#">in the queue</a></li>
+      <li><a href='{% url "progress" %}'>progress example</a></li>
+      <li><a href="#">jobs done</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+  </div>
+</nav>
+</header>
+
+
+{% block monitor %}
+{% endblock %}
+
+{% block names %}
+{% endblock %}
+
+{% block progress %}
+{% endblock %}
+
+
+</body>
+</html>

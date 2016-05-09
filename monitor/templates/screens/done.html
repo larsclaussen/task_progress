@@ -1,0 +1,11 @@
+{% block done %}
+<h2> hohoho </h2>
+{% for d in jobs_done %}
+{% for k,v in d.items %}
+<li>{{ k }}: {{ v }}</li>
+{% endfor %}
+{% endfor %}
+
+{% endblock %}
+
+

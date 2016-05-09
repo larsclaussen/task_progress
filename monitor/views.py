@@ -67,7 +67,6 @@ class MonitorView(MonitorThreadMixin, TemplateView):
                 data = job.result or job.state
                 return JsonResponse(data, safe=False)
 
-
             # no get parameters, return the running jobs list
             else:
                 return render_to_response(
@@ -104,9 +103,16 @@ class ProgressView(MonitorThreadMixin, TemplateView):
                 print 'job_id ', job_id
 
                 job = AsyncResult(job_id)
-                data = job.result or job.state
-                print "data ", data
-                return JsonResponse(data, safe=False)
+                state = job.state
+                result = job.result or state
+
+                if state.lower() in ("success", 'failure'):
+                    result = state.lower()
+                print "data ", result
+                try:
+                    return JsonResponse(result, safe=False)
+                except TypeError:
+                    import ipdb; ipdb.set_trace()
         else:
             context = self.get_context_data()
             return render_to_response("progress.html", context=context)
